@@ -1,17 +1,6 @@
-#ifdef _MACROS_H
-#define _MACROS_H
-#include "../general_macros.h"
-#endif
-
-#ifdef _STDLIO_H
-#define _STDLIO_H
-#include <stdio.h>
-#endif
-
-
 #define cord2move(i,j) (i * 3 + j)
 
-typdef enum{
+typedef enum{
     Empty = 0,
     X     = 1,
     O     = 2
@@ -19,20 +8,23 @@ typdef enum{
 
 
 typedef struct{
-    u_int turns;
-    char[9] board_elements;
+    bool is_user_turn;
+    char turns;
+    char board_elements[9];
 } tictactoe;
 
 
 void null_board(tictactoe board){
-    tictactoe.turns = 0;
-    tictactoe.board_elements = {0,0,0,
-                                0,0,0,
-                                0,0,0};
+    board.turns = 0;
+    char i;
+
+    for (i = 0; i < 9; i++){
+        board.board_elements[i] = 0;
+    }
 }
 
 int check_win(tictactoe board){
-    u_int i;
+    char i;
 
     //Check Diagnol win
     for(i = 0; i < 3; i++){
@@ -63,24 +55,24 @@ int check_win(tictactoe board){
     else return 0;
 }
 
-int is_valid_move(tictactoe board, u_int move){
-    if (board.elements[move] == Empty) return 1;
+int is_valid_move(tictactoe board, char move){
+    if (board.board_elements[move] == Empty) return 1;
     else return 0;
 }
 
-void update_turn(tictactoe board, u_int x_cord, u_int y_cord, player user){
+void update_turn(tictactoe board, char x_cord, char y_cord, player user){
 
-    u_int move = cord2move(x_cord,y_cord);
+    char move = cord2move(x_cord,y_cord);
 
     // Check if the move is valid
     if (!is_valid_move(board,move)){
-        print("Not a valid move\n");
-        break;
+        printf("Not a valid move\n");
     }
+    else{
+        board.turns += 1;
 
-    board.turns += 1;
-
-    if (user == X)      board.elements[move] = user;
-    else if (user == Y) board.elements[move] = user;
+        if (user == X)      board.board_elements[move] = user;
+        else if (user == O) board.board_elements[move] = user;
+    }
 }
 
